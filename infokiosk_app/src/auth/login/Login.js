@@ -4,8 +4,36 @@ import { Button, Col, Container, Form, FormGroup, FormLabel, Row } from "react-b
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+    const loginAPI = 'mongodb+srv://abuahm0607:abu123@login.yf4fva2.mongodb.net/?retryWrites=true&w=majority';
+    const navigate = useNavigate();
+
     const submitLoginForm = (e) => {
         e.preventDefault();
+        const formElement = document.querySelector('#loginForm');
+        const formData = new FormData(formElement);
+        const formDataJSON = Object.fromEntries(formData);
+        const btnPointer = document.querySelector('#login-btn');
+        btnPointer.innerHTML = 'Please wait..';
+        btnPointer.setAttribute('disabled', true);
+        axios.post(loginAPI, formDataJSON)
+                .then((response) => {
+                    btnPointer.innerHTML = 'Login';
+                    btnPointer.removeAttribute('disabled');
+
+                    const data = response.data;
+                    const token = data.token;
+
+                    if(!token) {
+                        alert('Unable to login. Please try after some time.');
+                        return;
+                    }
+                    
+                    localStorage.clear();
+                    localStorage.setItem('user-token', token);
+                    setTimeout(() => {
+                        navigate('/');
+                    }, 500);
+                })
     }
     return ( 
         <React.Fragment>
