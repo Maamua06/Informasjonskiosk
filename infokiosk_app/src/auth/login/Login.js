@@ -33,7 +33,11 @@ const Login = () => {
                     setTimeout(() => {
                         navigate('/');
                     }, 500);
-                })
+                }).catch((error) => {
+                    btnPointer.innerHTML = 'Login';
+                    btnPointer.removeAttribute('disabled');
+                    alert("Oops! Some error occured.");
+                });
     }
     return ( 
         <React.Fragment>
